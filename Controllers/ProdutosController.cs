@@ -135,4 +135,12 @@ public class ProdutosController : ControllerBase
 
 
     }
+
+    [HttpGet("pagination")]
+    public ActionResult<IEnumerable<ProdutoDTO>> Get([FromQuery] ProdutosParameters prodParameters)
+    {
+        var produtos = _uof.ProdutoRepository.GetProdutos(prodParameters);
+        var produtosDto = _mapper.Map<IEnumerable<ProdutoDTO>>(produtos);
+        return Ok(produtosDto);
+    }
 }
