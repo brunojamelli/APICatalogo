@@ -22,4 +22,12 @@ public class ProdutoRepository : Repository<Produto>, IProdutoRepository
         .Take(produtosParams.PageSize).ToList();
 
     }
+
+    public PagedList<Produto> GetProdutosPaged(ProdutosParameters produtosParams)
+    {
+        var produtos = GetAll().OrderBy(prod => prod.ProdutoId).AsQueryable();
+        var produtosPaginados = PagedList<Produto>.
+        ToPagedList(produtos,produtosParams.PageNumber, produtosParams.PageSize);
+        return produtosPaginados;
+    }
 }
