@@ -13,4 +13,13 @@ public class ProdutoRepository : Repository<Produto>, IProdutoRepository
     {
         return GetAll().Where(c => c.CategoriaId == id);
     }
+
+    public IEnumerable<Produto> GetProdutos(ProdutosParameters produtosParams)
+    {
+        return GetAll()
+        .OrderBy(prod => prod.Nome)
+        .Skip((produtosParams.PageNumber - 1) * produtosParams.PageSize)
+        .Take(produtosParams.PageSize).ToList();
+
+    }
 }
