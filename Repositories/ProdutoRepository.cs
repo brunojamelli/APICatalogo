@@ -41,6 +41,16 @@ public class ProdutoRepository : Repository<Produto>, IProdutoRepository
                 produtos = produtos.Where(prod => prod.Preco > filtroParams.Preco.Value)
                 .OrderBy(prod => prod.Preco);
             }
+            else if(filtroParams.PrecoCriterio.Equals("menor", StringComparison.OrdinalIgnoreCase))
+            {
+                produtos = produtos.Where(prod => prod.Preco < filtroParams.Preco.Value)
+                .OrderBy(prod => prod.Preco);
+            }
+            else if(filtroParams.PrecoCriterio.Equals("igual", StringComparison.OrdinalIgnoreCase))
+            {
+                produtos = produtos.Where(prod => prod.Preco == filtroParams.Preco.Value)
+                .OrderBy(prod => prod.Preco);
+            }
         }
 
         var produtosFiltrados = PagedList<Produto>
