@@ -119,8 +119,6 @@ public class CategoriasController : ControllerBase
     {
         var categorias = _uof.CategoriaRepository.GetCategoriasPaged(catParameters);
         
-        //var produtosDto = _mapper.Map<IEnumerable<ProdutoDTO>>(produtos);
-        //return Ok(produtosDto);
         var metaData = new {
             categorias.TotalCount,
             categorias.PageSize,

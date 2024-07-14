@@ -3,6 +3,7 @@ using APICatalogo.Models;
 using APICatalogo.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace APICatalogo.Controllers;
 
@@ -91,6 +92,26 @@ public class UsuariosController : ControllerBase
         var usuarioDeletadoDto = _mapper.Map<UsuarioDTO>(usuarioDeletado);
 
         return Ok(usuarioDeletadoDto);
+    }
+
+    [HttpGet("pagination")]
+    public ActionResult<IEnumerable<CategoriaDTO>> Get([FromQuery] UsuariosParameters usuariosParams)
+    {
+        var usuarios = _uof.UsuarioRepository.GetUsuariosPaged(usuariosParams);
+        
+        var metaData = new {
+            usuarios.TotalCount,
+            usuarios.PageSize,
+            usuarios.CurrentPage,
+            usuarios.TotalPages,
+            usuarios.HasNext,
+            usuarios.HasPrevious
+        };
+
+        Response.Headers.Add("X-Pagination",JsonConvert.SerializeObject(metaData));
+        var usuariosDto = _mapper.Map<IEnumerable<UsuarioDTO>>(usuarios);
+
+        return Ok(usuariosDto);
     }
 
 
