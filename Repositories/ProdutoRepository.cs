@@ -60,4 +60,19 @@ public class ProdutoRepository : Repository<Produto>, IProdutoRepository
 
         return produtosFiltrados;
     }
+
+    public PagedList<Produto> GetProdutosFiltroNome(ProdutosFiltroNome filtroParams)
+    {
+        var produtos = GetAll().AsQueryable();
+        if (!string.IsNullOrEmpty(filtroParams.Nome))
+        {
+            produtos = produtos.Where(prod => prod.Nome.Contains(filtroParams.Nome));
+        }
+        var produtosFiltrados = PagedList<Produto>
+        .ToPagedList(
+            produtos, filtroParams.PageNumber, filtroParams.PageSize
+        );
+
+        return produtosFiltrados;
+    }
 }

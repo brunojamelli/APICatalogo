@@ -176,5 +176,21 @@ public class ProdutosController : ControllerBase
         return Ok(produtosDto);
     }
 
+    [HttpGet("filter/nome/pagination")]
+    public ActionResult<IEnumerable<ProdutoDTO>> GetProdutosFilterNome([FromQuery] ProdutosFiltroNome filtroParams)
+    {
+        var produtos = _uof.ProdutoRepository.GetProdutosFiltroNome(filtroParams);
+        var metaData = new {
+            produtos.TotalCount,
+            produtos.PageSize,
+            produtos.CurrentPage,
+            produtos.TotalPages,
+            produtos.HasNext,
+            produtos.HasPrevious
+        };
+        Response.Headers.Add("X-Pagination",JsonConvert.SerializeObject(metaData));
+        var produtosDto = _mapper.Map<IEnumerable<ProdutoDTO>>(produtos);
+        return Ok(produtosDto);
+    }
 
 }
