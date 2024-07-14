@@ -2,6 +2,9 @@
 using APICatalogo.DTOs.Mappings;
 using APICatalogo.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+using Newtonsoft.Json;
+
 
 namespace APICatalogo.Controllers;
 
@@ -11,13 +14,17 @@ public class CategoriasController : ControllerBase
 {
     private readonly IUnitOfWork _uof;
     private readonly ILogger<CategoriasController> _logger;
+    private readonly IMapper _mapper;
+
 
     public CategoriasController(IUnitOfWork uof,
-        ILogger<CategoriasController> logger)
+        ILogger<CategoriasController> logger,
+        IMapper mapper)
     {
 
         _logger = logger;
         _uof = uof;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -106,5 +113,26 @@ public class CategoriasController : ControllerBase
         var categoriaExcluidaDto = categoriaExcluida.ToCategoriaDTO();
 
         return Ok(categoriaExcluidaDto);
+    }
+    [HttpGet("pagination")]
+    public ActionResult<IEnumerable<CategoriaDTO>> Get([FromQuery] CategoriaParameters catParameters)
+    {
+        var categorias = _uof.CategoriaRepository.GetCategoriasPaged(catParameters);
+        
+        //var produtosDto = _mapper.Map<IEnumerable<ProdutoDTO>>(produtos);
+        //return Ok(produtosDto);
+        var metaData = new {
+            categorias.TotalCount,
+            categorias.PageSize,
+            categorias.CurrentPage,
+            categorias.TotalPages,
+            categorias.HasNext,
+            categorias.HasPrevious
+        };
+
+        Response.Headers.Add("X-Pagination",JsonConvert.SerializeObject(metaData));
+        var categoriasDto = _mapper.Map<IEnumerable<CategoriaDTO>>(categorias);
+
+        return Ok(categoriasDto);
     }
 }
