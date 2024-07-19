@@ -133,4 +133,22 @@ public class CategoriasController : ControllerBase
 
         return Ok(categoriasDto);
     }
+
+    [HttpGet("filter/nome/pagination")]
+    public ActionResult<IEnumerable<UsuarioDTO>> GetCategoriasFilterNome([FromQuery] CategoriasFiltroNome filtroParams)
+    {
+        var categorias = _uof.CategoriaRepository.GetGategoriasFiltroNome(filtroParams);
+        var metaData = new {
+            categorias.TotalCount,
+            categorias.PageSize,
+            categorias.CurrentPage,
+            categorias.TotalPages,
+            categorias.HasNext,
+            categorias.HasPrevious
+        };
+        Response.Headers.Add("X-Pagination",JsonConvert.SerializeObject(metaData));
+        var catDto = _mapper.Map<IEnumerable<CategoriaDTO>>(categorias);
+        return Ok(catDto);
+    }
+
 }
