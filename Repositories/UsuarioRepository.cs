@@ -21,7 +21,7 @@ public class UsuarioRepository : Repository<Usuario>, IUsuarioRepository
         var usuarios = GetAll().AsQueryable();
         if (!string.IsNullOrEmpty(filtroParams.Nome))
         {
-            usuarios = usuarios.Where(usr => usr.Nome.Contains(filtroParams.Nome));
+            usuarios = usuarios.Where(usr => usr.Nome.Contains(filtroParams.Nome, StringComparison.OrdinalIgnoreCase));
         }
         var usuariosFiltrados = PagedList<Usuario>
         .ToPagedList(

@@ -66,7 +66,7 @@ public class ProdutoRepository : Repository<Produto>, IProdutoRepository
         var produtos = GetAll().AsQueryable();
         if (!string.IsNullOrEmpty(filtroParams.Nome))
         {
-            produtos = produtos.Where(prod => prod.Nome.Contains(filtroParams.Nome));
+            produtos = produtos.Where(prod => prod.Nome.Contains(filtroParams.Nome, StringComparison.OrdinalIgnoreCase));
         }
         var produtosFiltrados = PagedList<Produto>
         .ToPagedList(
