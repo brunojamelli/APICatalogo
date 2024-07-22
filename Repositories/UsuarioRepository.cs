@@ -6,13 +6,13 @@ namespace APICatalogo.Repositories;
 public class UsuarioRepository : Repository<Usuario>, IUsuarioRepository
 {
     public UsuarioRepository(AppDbContext context) : base(context)
-    {        
+    {
     }
     public PagedList<Usuario> GetUsuariosPaged(UsuariosParameters usuariosParameters)
     {
         var usuarios = GetAll().OrderBy(usr => usr.UsuarioID).AsQueryable();
         var usuariosPaginados = PagedList<Usuario>.
-        ToPagedList(usuarios,usuariosParameters.PageNumber, usuariosParameters.PageSize);
+        ToPagedList(usuarios, usuariosParameters.PageNumber, usuariosParameters.PageSize);
         return usuariosPaginados;
     }
 
@@ -23,6 +23,10 @@ public class UsuarioRepository : Repository<Usuario>, IUsuarioRepository
         {
             usuarios = usuarios.Where(usr => usr.Nome.Contains(filtroParams.Nome, StringComparison.OrdinalIgnoreCase));
         }
+        // else if(!string.IsNullOrEmpty(filtroParams.Email))
+        // {
+        //     usuarios = usuarios.Where(usr => usr.Email.Contains(filtroParams.Email, StringComparison.OrdinalIgnoreCase));
+        // }
         var usuariosFiltrados = PagedList<Usuario>
         .ToPagedList(
             usuarios, filtroParams.PageNumber, filtroParams.PageSize

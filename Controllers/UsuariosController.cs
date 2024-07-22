@@ -2,6 +2,7 @@ using APICatalogo.DTOs;
 using APICatalogo.Models;
 using APICatalogo.Repositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -44,6 +45,7 @@ public class UsuariosController : ControllerBase
         return Ok(usrDto);
     }
 
+    [Authorize]
     [HttpPost]
     public ActionResult<UsuarioDTO> Post(UsuarioDTO usrDTO)
     {
